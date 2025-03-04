@@ -1,87 +1,97 @@
+/* Employee */
 CREATE TABLE IF NOT EXISTS store_employee (
 	id_ int8 NOT NULL,
 	lastname varchar(100) NOT NULL,
 	firstname varchar(100) NOT NULL,
 	patronymic varchar(100) NOT NULL,
 	birth_date timestamp NOT NULL,
-	position_id int8 NOT NULL,
-    shop_id int8 NOT NULL,
+	positionId int8 NOT NULL,
+    shopId int8 NOT NULL,
 	gender bool NOT NULL,
 	CONSTRAINT store_employee_pkey PRIMARY KEY (id_),
-	CONSTRAINT fk_employee_position FOREIGN KEY (position_id) REFERENCES positions(id_),
-    CONSTRAINT fk_employee_shop FOREIGN KEY (shop_id) REFERENCES stores(id_);
+	CONSTRAINT fk_employee_position FOREIGN KEY (positionId) REFERENCES position_types(id_),
+    CONSTRAINT fk_employee_shop FOREIGN KEY (shopId) REFERENCES shop(id_);
 );
 
+/* counter */
 CREATE TABLE IF NOT EXISTS counter (
 	"name" varchar(75) NOT NULL,
 	currentid int8 NULL,
 	CONSTRAINT counter_pkey PRIMARY KEY (name)
 );
 
-CREATE TABLE IF NOT EXISTS store_eshop (
+/* ElectroType */
+CREATE TABLE IF NOT EXISTS electro_item_type (
     id_ int8 NOT NULL,
     name varchar(150) NOT NULL,
-    type_id int8 NOT NULL,
+    CONSTRAINT electro_item_type_pkey PRIMARY KEY (id_)
+);
+
+/* ElectroItem */
+CREATE TABLE IF NOT EXISTS electro_item (
+    id_ int8 NOT NULL,
+    name varchar(150) NOT NULL,
+    typeId int8 NOT NULL,
     price numeric(10, 2) NOT NULL,
     quantity int4 NOT NULL,
-    is_archived bool NOT NULL,
+    archive bool NOT NULL,
     description text,
-    CONSTRAINT store_eshop_pkey PRIMARY KEY (id_),
-    CONSTRAINT fk_store_eshop_type FOREIGN KEY (type_id) REFERENCES store_eshop_types(id_)
+    CONSTRAINT electro_item_pkey PRIMARY KEY (id_),
+    CONSTRAINT fk_electro_item_type FOREIGN KEY (typeId) REFERENCES electro_item_type(id_)
 );
 
+/* Purchase */
 CREATE TABLE IF NOT EXISTS store_purchase (
     id_ int8 NOT NULL,
-    store_eshop_id int8 NOT NULL,
-    employee_id int8 NOT NULL,
-    shop_id int8 NOT NULL,
-    purchase_date timestamp NOT NULL,
-    purchase_type_id int8 NOT NULL,
+    electroId int8 NOT NULL,
+    employeeId int8 NOT NULL,
+    purchaseDate timestamp NOT NULL,
+    typeId int8 NOT NULL,
+    shopId int8 NOT NULL,
     CONSTRAINT store_purchase_pkey PRIMARY KEY (id_),
-    CONSTRAINT fk_purchases_store_eshop FOREIGN KEY (store_eshop_id) REFERENCES store_eshop(id_),
-    CONSTRAINT fk_purchases_employee FOREIGN KEY (employee_id) REFERENCES store_employee(id_),
-    CONSTRAINT fk_purchases_shop FOREIGN KEY (shop_id) REFERENCES stores(id_),
-    CONSTRAINT fk_purchases_purchase_type FOREIGN KEY (purchase_type_id) REFERENCES store_purchase_types(id_)
+    CONSTRAINT fk_purchases_electro_item FOREIGN KEY (electroId) REFERENCES electro_item(id_),
+    CONSTRAINT fk_purchases_employee FOREIGN KEY (employeeId) REFERENCES store_employee(id_),
+    CONSTRAINT fk_purchases_shop FOREIGN KEY (shopId) REFERENCES shop(id_),
+    CONSTRAINT fk_purchases_purchase_type FOREIGN KEY (typeId) REFERENCES store_purchase_type(id_)
 );
 
-CREATE TABLE IF NOT EXISTS positions (
+/* PositionType */
+CREATE TABLE IF NOT EXISTS position_types (
     id_ int8 NOT NULL,
     name varchar(150) NOT NULL,
-    CONSTRAINT positions_pkey PRIMARY KEY (id_)
+    CONSTRAINT position_types_pkey PRIMARY KEY (id_)
 );
 
-CREATE TABLE IF NOT EXISTS store_eshop_types (
+/* Shop */
+CREATE TABLE IF NOT EXISTS shop (
     id_ int8 NOT NULL,
-    name varchar(150) NOT NULL,
-    CONSTRAINT store_eshop_types_pkey PRIMARY KEY (id_)
-);
-
-CREATE TABLE IF NOT EXISTS stores (
-    id_ int8 NOT NULL,
-    name varchar(150) NOT NULL,
+    name varchar(250) NOT NULL,
     address text NOT NULL,
-    CONSTRAINT stores_pkey PRIMARY KEY (id_)
+    CONSTRAINT shop_pkey PRIMARY KEY (id_)
 );
 
-CREATE TABLE IF NOT EXISTS store_purchase_types (
+/* PurchaseType */
+CREATE TABLE IF NOT EXISTS store_purchase_type (
     id_ int8 NOT NULL,
     name varchar(150) NOT NULL,
-    CONSTRAINT store_purchase_types_pkey PRIMARY KEY (id_)
+    CONSTRAINT store_purchase_type_pkey PRIMARY KEY (id_)
 );
 
-CREATE TABLE IF NOT EXISTS store_eshop_type_employee (
-    store_eshop_type_id int8 NOT NULL,
-    employee_id int8 NOT NULL,
-    CONSTRAINT store_eshop_type_employee_pkey PRIMARY KEY (store_eshop_type_id, employee_id),
-    CONSTRAINT fk_store_eshop_type FOREIGN KEY (store_eshop_type_id) REFERENCES store_eshop_types(id_),
-    CONSTRAINT fk_employee FOREIGN KEY (employee_id) REFERENCES store_employee(id_)
+/* ElectroEmployee */
+CREATE TABLE IF NOT EXISTS electro_employee (
+    electro_item_typeId int8 NOT NULL,
+    employeeId int8 NOT NULL,
+    CONSTRAINT electro_employee_pkey PRIMARY KEY (electro_item_typeId, employeeId),
+    CONSTRAINT fk_electro_item_type FOREIGN KEY (electro_item_typeId) REFERENCES electro_item_type(id_),
+    CONSTRAINT fk_employee FOREIGN KEY (employeeId) REFERENCES store_employee(id_)
 );
 
-CREATE TABLE IF NOT EXISTS store_eshop_shop (
-    store_eshop_id int8 NOT NULL,
-    shop_id int8 NOT NULL,
+/* Electroshop */
+CREATE TABLE IF NOT EXISTS electro_item_shop (
+    electroId int8 NOT NULL,
+    shopId int8 NOT NULL,
     quantity int4 NOT NULL,
-    CONSTRAINT store_eshop_shop_pkey PRIMARY KEY (store_eshop_id, shop_id),
-    CONSTRAINT fk_store_eshop FOREIGN KEY (store_eshop_id) REFERENCES store_eshop(id_),
-    CONSTRAINT fk_shop FOREIGN KEY (shop_id) REFERENCES stores(id_)
+    CONSTRAINT electro_item_shop_pkey PRIMARY KEY (electroId, shopId),
+    CONSTRAINT fk_electro_item FOREIGN KEY (electroId) REFERENCES electro_item(id_),
+    CONSTRAINT fk_shop FOREIGN KEY (shopId) REFERENCES shop(id_)
 );
