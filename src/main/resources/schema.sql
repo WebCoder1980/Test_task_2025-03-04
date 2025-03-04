@@ -87,11 +87,11 @@ CREATE TABLE IF NOT EXISTS electro_employee (
 );
 
 /* Electroshop */
-CREATE TABLE IF NOT EXISTS electro_item_shop (
+CREATE TABLE IF NOT EXISTS store_eshop (
     electroId int8 NOT NULL,
     shopId int8 NOT NULL,
     quantity int4 NOT NULL,
-    CONSTRAINT electro_item_shop_pkey PRIMARY KEY (electroId, shopId),
+    CONSTRAINT store_eshop_pkey PRIMARY KEY (electroId, shopId),
     CONSTRAINT fk_electro_item FOREIGN KEY (electroId) REFERENCES electro_item(id_),
     CONSTRAINT fk_shop FOREIGN KEY (shopId) REFERENCES shop(id_)
 );
