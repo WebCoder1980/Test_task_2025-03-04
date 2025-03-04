@@ -1,4 +1,7 @@
 package ru.isands.test.estore.dao.repo;
 
-public class ElectroItemTypeRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.isands.test.estore.dao.entity.ElectroItemType;
+
+public interface ElectroItemTypeRepository extends JpaRepository<ElectroItemType, Long> {
 }

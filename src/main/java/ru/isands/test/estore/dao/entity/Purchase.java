@@ -59,7 +59,7 @@ public class Purchase implements Serializable {
 	/**
 	 * Способ оплаты
 	 */
-	@Column(name = "type", nullable = false)
+	@Column(name = "typeId", nullable = false)
 	int type;
 	
 }

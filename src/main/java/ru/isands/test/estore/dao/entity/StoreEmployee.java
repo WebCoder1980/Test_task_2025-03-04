@@ -1,4 +1,28 @@
 package ru.isands.test.estore.dao.entity;
 
-public class StoreEmployee {
+import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "store_employee")
+public class StoreEmployee implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_", unique = true, nullable = false)
+    private Long id;
+
+    @Column(name = "name", nullable = false, length = 150)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "positionTypeId", nullable = false)
+    private PositionType positionType;
 }
